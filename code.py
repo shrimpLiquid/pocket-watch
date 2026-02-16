@@ -23,18 +23,22 @@ def dist(p1,p2):
         dist = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 )
         return(dist)
 try:
-    microcontroller.cpu.frequency = 200000000 # Try setting to 200 MHz (adjust based on board)
+    microcontroller.cpu.frequency = 200*1000000
     print(":)")
 except ValueError:
     print(":(")
-    pass # Continue if overclocking is not supported or fails
+    pass
 
 displayio.release_displays()
 prespuf = 0
 touch = 0
 prepos = 0
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
-i2c = busio.I2C(board.SCL, board.SDA)
+try:
+	i2c = busio.I2C(board.SCL, board.SDA)
+except:
+	import supervisor
+	supervisor.reload()
 rtc = PCF8563(i2c)
 xrd = XiaoRoundDisplay(i2c, spi, 90)
 screen = xrd.display()  # Screen object
@@ -110,13 +114,15 @@ if True:
 
 secc = Circle(110, 110, 10, fill=0xffa0ff)
 splash.append(secc)
+
 minc = Circle(110, 110, 10, fill=0x00ffff)
 splash.append(minc)
 
 circle2 = Circle(120, 120, 10, fill=0xffffff)
 splash.append(circle2)
+
 if 1==0:
-	t = time.struct_time((2025, 11, 2, 7, 26, 30, 1, -1, -1))
+	t = time.struct_time((2026, 2, 14, 16, 41, 30, 1, -1, -1))
 	rtc.datetime = t
 	
 seca=0
@@ -126,7 +132,12 @@ hour = 0
 splash.scale=1
 
 while True:
-	t = rtc.datetime
+	try:
+		t = rtc.datetime
+		circle2.fill = 0xffffff
+	except:
+		circle2.fill = 0xff0000
+		t = time.struct_time((0, 0, 0, 0, 0, 0, 0, 0, 0))
 	seca = (t.tm_sec/60*360)-90
 	seca +=1
 	secc.x = int(110+cos(rad(seca))*60)
@@ -146,6 +157,6 @@ while True:
 	if xrd.is_touched():
 		nowt= xrd.touch_read()
 		if isinstance(nowt, tuple):
-			if dist(nowt,(120,120)) < 20: 
+			if dist(nowt,(120,120)) < 40: 
 				launcher(splash,xrd,screen)
 	touch = int(xrd.is_touched())

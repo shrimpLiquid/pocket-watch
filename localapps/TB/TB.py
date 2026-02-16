@@ -3,13 +3,21 @@
 from apps import *
 
 
-def TB(splash,xrd,screen):
+def TB(splash, xrd, screen):
     import displayio
-    startup(splash)
+    from jpegio import JpegDecoder
     splash.scale=2
-    bitmap_file = open("localapps/TB/TB.bmp", "rb") # Assuming 'images' folder
-    on_disk_bitmap = displayio.OnDiskBitmap(bitmap_file)
-    tile_grid = displayio.TileGrid(on_disk_bitmap, pixel_shader=on_disk_bitmap.pixel_shader)
+
+    decoder = JpegDecoder()
+    width, height = decoder.open("/localapps/TB/TB.jpg")
+    bitmap = displayio.Bitmap(width, height, 65535)
+    decoder.decode(bitmap)
+    
+    # FIX: Use a ColorConverter to fix the color "swapping" issu
+    # This matches the RGB565_SWAPPED output of the jpegio library
+    shader = displayio.ColorConverter(input_colorspace=displayio.Colorspace.RGB565_SWAPPED)
+    
+    tile_grid = displayio.TileGrid(bitmap, pixel_shader=shader)
     splash.append(tile_grid)
     ttimer = 0
     while True:

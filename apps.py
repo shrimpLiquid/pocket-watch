@@ -28,19 +28,21 @@ def launcher(splash,xrd,screen):
     startup(splash)
     splash.append(Circle(120, 120, 30, fill=0xffffff))
     for i in range(apps):
-        angle = radians((360/apps)*i)
+        angle = radians(((360/apps)*i)-90)
         print(str(listapps(i)[0]+"circ=Circle("+str(int(cos(angle)*100)+120)+","+str(int(sin(angle)*100)+120)+",15,fill="+listapps(i)[2]+")"))
         exec(str(listapps(i)[0]+"circ=Circle("+str(int(cos(angle)*100)+120)+","+str(int(sin(angle)*100)+120)+",15,fill="+listapps(i)[2]+")"))
         exec("splash.append("+listapps(i)[0]+"circ)")
+    
     while True:
         if xrd.is_touched():
             t = (0,1)
             t = xrd.touch_read()
             if t is not None:
+                
                 if dist((120,120),t) < 30:
                     supervisor.reload()
         for i in range(apps):
-            angle = radians((360/apps)*i)
+            angle = radians(((360/apps)*i)-90)
             if xrd.is_touched():
                 t = (0,0)
                 t = xrd.touch_read()
