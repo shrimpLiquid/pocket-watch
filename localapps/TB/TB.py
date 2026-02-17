@@ -2,7 +2,7 @@
 #0x0000ff
 from apps import *
 
-
+#goob
 def TB(splash, xrd, screen):
     import displayio
     from jpegio import JpegDecoder
@@ -13,8 +13,6 @@ def TB(splash, xrd, screen):
     bitmap = displayio.Bitmap(width, height, 65535)
     decoder.decode(bitmap)
     
-    # FIX: Use a ColorConverter to fix the color "swapping" issu
-    # This matches the RGB565_SWAPPED output of the jpegio library
     shader = displayio.ColorConverter(input_colorspace=displayio.Colorspace.RGB565_SWAPPED)
     
     tile_grid = displayio.TileGrid(bitmap, pixel_shader=shader)

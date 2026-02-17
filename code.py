@@ -11,7 +11,6 @@ from math import cos,sin,sqrt
 from CircuitPython_XiaoRoundDisplay import XiaoRoundDisplay # type: ignore
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_shapes.circle import Circle
-from adafruit_display_shapes.arc import Arc
 from adafruit_display_shapes.roundrect import RoundRect
 from adafruit_display_shapes.triangle import Triangle
 from adafruit_display_shapes.filled_polygon import FilledPolygon
@@ -19,6 +18,7 @@ from adafruit_display_shapes.line import Line
 import terminalio
 import microcontroller # Import microcontroller modul
 from adafruit_display_text import label
+
 def dist(p1,p2):
         dist = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 )
         return(dist)
@@ -46,9 +46,6 @@ screen.auto_refresh = False
 global splash
 splash = displayio.Group()
 screen.root_group = splash
-
-
-
 hourc = Circle(110, 110, 10, fill=0xaa00ff)
 splash.append(hourc)
 if True:

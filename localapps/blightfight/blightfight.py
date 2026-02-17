@@ -8,11 +8,7 @@ from adafruit_display_shapes.circle import Circle
 from adafruit_display_shapes.rect import Rect
 from random import randint, seed # Import seed to potentially ensure consistency if needed
 
-# Optional: Overclock the CPU if using an RP2040 or M4/M7 board for faster processing
-try:
-    microcontroller.cpu.frequency = 200000000 # Try setting to 200 MHz (adjust based on board)
-except ValueError:
-    pass # Continue if overclocking is not supported or fails
+
 
 def blightfight(splash,xrd,screen):
     startup(splash)
