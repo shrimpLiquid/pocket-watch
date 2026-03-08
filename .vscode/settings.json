@@ -2,7 +2,7 @@
     "python.analysis.extraPaths": [
         "c:\\Users\\gorge\\.vscode\\extensions\\joedevivo.vscode-circuitpython-0.1.20-win32-x64\\boards\\0x2886\\0x0042",
         "c:\\Users\\gorge\\.vscode\\extensions\\joedevivo.vscode-circuitpython-0.1.20-win32-x64\\stubs",
-        "c:\\Users\\gorge\\AppData\\Roaming\\Code\\User\\globalStorage\\joedevivo.vscode-circuitpython\\bundle\\20260214\\adafruit-circuitpython-bundle-py-20260214\\lib"
+        "c:\\Users\\gorge\\AppData\\Roaming\\Code\\User\\globalStorage\\joedevivo.vscode-circuitpython\\bundle\\20260307\\adafruit-circuitpython-bundle-py-20260307\\lib"
     ],
     "python.languageServer": "Pylance",
     "python.analysis.diagnosticSeverityOverrides": {

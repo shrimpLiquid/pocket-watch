@@ -2,36 +2,53 @@ import supervisor
 import bitmaptools
 import os
 from time import sleep
-#appslist=[('blightfight','splash,xrd,screen',"0xff0000"),("app","splash,xrd,screen","0x00ff00")]
-direct = os.listdir("localapps")
-apps=len(direct)
+import sys
+sys.path.append("/sd")
+
+global apps
+apps = 0
 def listapps(num):
-    direct = os.listdir("localapps")
-    appslist = []
-    for f in direct:
-            file = open("localapps/"+f+"/"+f+".py")
-            lines = file.readlines()  
-            appslist.append((str(f).replace(".py","").replace("'","").replace("[","").replace("]",""),str(lines[0]).strip("#\n"),str(lines[1]).strip("#\n")))#sdhkasjzh
-    #print(appslist[num])
-    return(appslist[num])
+    global apps
+    print
+
+    direct = [f for f in os.listdir("/sd") if f != "System Volume Information" and not f.startswith(".")]
+    apps = len(direct)
+    
+    f = direct[num]
+    
+
+    with open("/sd/"+f+"/"+f+".py", "r") as file:
+        lines = file.readlines()
+        name = str(f)
+        args = str(lines[0]).strip("#\n")
+        
+
+
+        color = str(int(lines[1].strip("#\n"), 16))
+        return (name, args, color)
 def startup(splash):
     while len(splash) > 0: 
         splash.pop()
 
 def launcher(splash,xrd,screen):
     sleep(2)
+    listapps(0)
     from adafruit_display_shapes.circle import Circle
     from math import cos,sin,radians,sqrt
     def dist(p1,p2):
         dist = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 )
         return(dist)
     startup(splash)
-    splash.append(Circle(120, 120, 30, fill=0xffffff))
+    splash.append(Circle(120, 120, 15, fill=0xffffff))
+    screen.refresh()
     for i in range(apps):
+        aiq = listapps(i)
         angle = radians(((360/apps)*i)-90)
-        print(str(listapps(i)[0]+"circ=Circle("+str(int(cos(angle)*100)+120)+","+str(int(sin(angle)*100)+120)+",15,fill="+listapps(i)[2]+")"))
-        exec(str(listapps(i)[0]+"circ=Circle("+str(int(cos(angle)*100)+120)+","+str(int(sin(angle)*100)+120)+",15,fill="+listapps(i)[2]+")"))
-        exec("splash.append("+listapps(i)[0]+"circ)")
+        exec(str(aiq[0]+"circ=Circle("+str(int(cos(angle)*100)+120)+","+str(int(sin(angle)*100)+120)+",15,fill="+aiq[2]+")"))
+        exec("splash.append("+aiq[0]+"circ)")
+        exec(str(aiq[0]+"hcirc=Circle("+str(int(cos(angle)*10)+120)+","+str(int(sin(angle)*10)+120)+",30,fill=0xffffff)"))
+        exec("splash.append("+aiq[0]+"hcirc)")
+        screen.refresh()
     
     while True:
         if xrd.is_touched():
@@ -49,9 +66,11 @@ def launcher(splash,xrd,screen):
                 if t is not None:
                     if dist((int(cos(angle)*100)+120,int(sin(angle)*100)+120),t) < 20:
                         print(i)
-                        print("from localapps."+listapps(i)[0]+"."+listapps(i)[0]+" import "+listapps(i)[0])
-                        exec("from localapps."+listapps(i)[0]+"."+listapps(i)[0]+" import "+listapps(i)[0])
-                        exec(listapps(i)[0]+"("+listapps(i)[1]+")")
+                        print("from ."+listapps(i)[0]+"."+listapps(i)[0]+" import "+listapps(i)[0])
+                        name = listapps(i)[0]
+                        args = listapps(i)[1]
+                        exec("import " + name + "." + name + " as m")
+                        exec("m." + name + "(" + args + ")")
             
 
         screen.refresh()
@@ -62,6 +81,6 @@ def launcher(splash,xrd,screen):
 
 
         """
-from localapps.indev.indev import indev
-from localapps.blightfight.blightfight import blightfight
+from .indev.indev import indev
+from .blightfight.blightfight import blightfight
 """
