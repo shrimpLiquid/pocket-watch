@@ -9,6 +9,7 @@ from math import radians as rad
 from math import cos,sin,sqrt
 from CircuitPython_XiaoRoundDisplay import XiaoRoundDisplay 
 from adafruit_display_shapes.rect import Rect
+from adafruit_display_shapes.arc import Arc
 from adafruit_display_shapes.circle import Circle
 from adafruit_display_shapes.roundrect import RoundRect
 from adafruit_display_shapes.triangle import Triangle
@@ -158,9 +159,11 @@ splash.append(minc)
 
 circle2 = Circle(120, 120, 10, fill=0xffffff)
 splash.append(circle2)
+###
 
-if 0==1:
-    t = time.struct_time((2026, 3, 8, 10, 33, 30, 1, -1, -1))
+
+if 1==0:
+    t = time.struct_time((2026, 3, 8, 7, 17, 30, 1, -1, -1))
     rtc.datetime = t
     
 seca=0
@@ -168,25 +171,40 @@ mina=1
 houra =0
 hour = 0
 splash.scale=1
-
+mint = label.Label(terminalio.FONT, text="goob", color=0x0000ff,x=115,y=10)
+mintxp = label.Label(terminalio.FONT, text="goob", color=0x0000ff,x=115,y=10)
+splash.append(mint)
+splash.append(mintxp)
+arc = Arc(x=120, y=120, radius=120, angle=50, direction=90, segments=5, fill=0xaa00ff,arc_width=21)
+splash.insert(0,arc)
 while True:
+    
     try:
         t = rtc.datetime
         circle2.fill = 0xffffff
     except:
         circle2.fill = 0xff0000
-        t = time.struct_time((0, 0, 0, 0, 0, 0, 0, 0, 0))
+        from random import randint as ran
+        t = time.struct_time((0, 0, 0, ran(0,23), ran(0,59), ran(0,59), 0, 0,0))
     seca = (t.tm_sec/60*360)-90
     seca +=1
     secc.x = int(110+cos(rad(seca))*60)
     secc.y = int(110+sin(rad(seca))*60)
+    secc.fill = (0xffb0ff,0xff90ff)[int(t.tm_sec)%2]
     mina = (((t.tm_min/60)*360))-90
     minc.x = int(110+cos(rad(mina))*85)
     minc.y = int(110+sin(rad(mina))*85)
+    smin = str(t.tm_min)
+    mint.x ,mint.y = minc.x+5+[0,3][len(smin)-2],minc.y+10
+    mint.text = smin
+    mintxp.x ,mintxp.y = minc.x+6+[0,3][len(smin)-2],minc.y+10
+    mintxp.text = smin
     hour = t.tm_hour
     if hour >12:
         hour -= 12
     houra = (((t.tm_hour/12)*360))-90
+    #houra += 5
+    arc.direction = (180 - houra)+180
     hourc.x = int(110+cos(rad(houra))*109)
     hourc.y = int(110+sin(rad(houra))*109)
     screen.refresh()

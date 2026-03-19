@@ -3,6 +3,7 @@ import bitmaptools
 import os
 from time import sleep
 import sys
+from adafruit_display_shapes.filled_polygon import FilledPolygon
 sys.path.append("/sd")
 
 global apps
@@ -39,23 +40,24 @@ def launcher(splash,xrd,screen):
         dist = sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 )
         return(dist)
     startup(splash)
-    splash.append(Circle(120, 120, 15, fill=0xffffff))
+    
+    #splash.append(Circle(120, 120, 15, fill=0xffffff))
     screen.refresh()
+    pois = []
     for i in range(apps):
         aiq = listapps(i)
         angle = radians(((360/apps)*i)-90)
         exec(str(aiq[0]+"circ=Circle("+str(int(cos(angle)*100)+120)+","+str(int(sin(angle)*100)+120)+",15,fill="+aiq[2]+")"))
         exec("splash.append("+aiq[0]+"circ)")
-        exec(str(aiq[0]+"hcirc=Circle("+str(int(cos(angle)*10)+120)+","+str(int(sin(angle)*10)+120)+",30,fill=0xffffff)"))
-        exec("splash.append("+aiq[0]+"hcirc)")
+        pois.append((int(cos(angle)*40)+120,int(sin(angle)*40)+120))
         screen.refresh()
-    
+    polygon = FilledPolygon(pois,fill=0xffffff,outline=0x0,stroke=4)
+    splash.append(polygon)
     while True:
         if xrd.is_touched():
             t = (0,1)
             t = xrd.touch_read()
             if t is not None:
-                
                 if dist((120,120),t) < 30:
                     supervisor.reload()
         for i in range(apps):
