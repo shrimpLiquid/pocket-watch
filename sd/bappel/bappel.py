@@ -1,22 +1,23 @@
 #splash,xrd,screen
-#0xff8800
+#0x8800ff
+#290
 from apps import *
 
-def video(splash, xrd, screen):
+def bappel(splash, xrd, screen):
     import displayio
     from jpegio import JpegDecoder
     splash.scale = 2
 
     decoder = JpegDecoder()
     # Pre-allocate one bitmap and one tilegrid
-    width, height = decoder.open("/sd/video/frames/ezgif-frame-001.jpg")
+    width, height = decoder.open("/sd/bappel/frames/ezgif-frame-001.jpg")
     bitmap = displayio.Bitmap(width, height, 65535)
     shader = displayio.ColorConverter(input_colorspace=displayio.Colorspace.RGB565_SWAPPED)
     tile_grid = displayio.TileGrid(bitmap, pixel_shader=shader)
     splash.append(tile_grid)
 
     for i in range(2, 287):
-        filename = f"/sd/video/frames/ezgif-frame-{i:03d}.jpg"
+        filename = f"/sd/bappel/frames/ezgif-frame-{i:03d}.jpg"
         try:
             # Decode directly into the existing bitmap
             decoder.open(filename)

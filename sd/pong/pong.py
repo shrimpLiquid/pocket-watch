@@ -1,5 +1,6 @@
 #splash,xrd,screen
 #0xffff00
+#60
 from apps import *
 
 def pong(splash, xrd, screen):
@@ -21,7 +22,7 @@ def pong(splash, xrd, screen):
     startup(splash)
     arc1 = Arc(x=120,y=120,radius=120,angle=45,direction=0,segments=3,arc_width=2,fill=0xffffff)
     splash.append(arc1)
-    ball = Circle(120, 120, 8, fill=0xffffff)
+    ball = Circle(120, 120, r=8, fill=0xffffff)
     splash.append(ball)
     screen.auto_refresh = True
     a = 0

@@ -1,5 +1,6 @@
 #splash,xrd,screen
-#0x888888
+#0xff00ff
+#300
 from apps import *
 
 #goob

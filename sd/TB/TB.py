@@ -1,5 +1,6 @@
 #splash,xrd,screen
 #0x0000ff
+#240
 from apps import *
 
 #goob

@@ -1,3 +1,3 @@
-Adafruit CircuitPython 10.0.3 on 2025-10-17; Seeeduino XIAO RP2040 with rp2040
-Board ID:seeeduino_xiao_rp2040
-UID:4250304B38353817
+Adafruit CircuitPython 9.2.9 on 2025-09-07; Seeed Xiao ESP32-S3 Sense with ESP32S3
+Board ID:seeed_xiao_esp32_s3_sense
+UID:C1BD4D441B02

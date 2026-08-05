@@ -1,5 +1,6 @@
 #splash,xrd,screen
 #0xff0000
+#0
 from apps import*
 import displayio
 import microcontroller # Import microcontroller module
@@ -16,7 +17,7 @@ def blightfight(splash,xrd,screen):
     # Disable auto_refresh to only update when screen.refresh() is called
     screen.auto_refresh = False 
     
-    bmp = displayio.Bitmap(60, 60, 10)
+    bmp = displayio.Bitmap(120, 120, 10)
     palette = displayio.Palette(10)
     palette[0] =0x000000
     palette[1] =0xff4444
@@ -28,7 +29,7 @@ def blightfight(splash,xrd,screen):
     palette[7] =0x7f44ff
     palette[8] =0xff44ff
     palette[9] =0xffffff
-    splash.scale=4
+    splash.scale=2
     
     # Create a TileGrid using the Bitmap and Palette
     tile_grid = displayio.TileGrid(bmp, pixel_shader=palette)
@@ -40,33 +41,32 @@ def blightfight(splash,xrd,screen):
         return max(min(maxn, n), minn)
     
     blig = [[10,10,1],[30,6,2],[50,10,3],[6,30,8],[30,30,9],[54,30,4],[10,50,7],[30,54,6],[50,50,5]]
-    
+    for p in blig:
+        p[0] *= 2
+        p[1] *= 2
     while True:
         # Clear the bitmap using the faster C-implemented fill method
         bmp.fill(0) 
-        for i in range(10):
+        for i in range(5):
         # Optimize the inner loops
             for p in blig:
                 # Move bounds checking outside the inner loop
-                x = clamp(p[0], 0, 59)
-                y = clamp(p[1], 0, 59)
+                x = clamp(p[0], 0, 119)
+                y = clamp(p[1], 0, 119)
                 color_index = p[2]
                 if bmp[x, y] in [0, color_index]:
                     bmp[x, y] = color_index
                 
                 # Simplified collision check
-                p[0],p[1]=clamp(p[0],0,59),clamp(p[1],0,59)
+                p[0],p[1]=clamp(p[0],0,119),clamp(p[1],0,119)
                 if not bmp[p[0],p[1]] in [0,p[2]]:
                     blig.remove(p)
                 bmp[x, y] = color_index
-                # else: the point is effectively removed from blig for the next frame
                 
-                # Reproduction (no change needed here, as it's already using randint)
                 if 1 == randint(0, 100):
                     blig.append(p)
 
 
-                # Movement logic (no change needed)
                 D = randint(0, 3)
                 if D == 0: p[0] += 1
                 elif D == 1: p[0] -= 1
@@ -80,7 +80,10 @@ def blightfight(splash,xrd,screen):
         # Handle user input with a short sleep to yield to background tasks
         if xrd.is_touched():
             blig = [[10,10,1],[30,6,2],[50,10,3],[6,30,8],[30,30,9],[54,30,4],[10,50,7],[30,54,6],[50,50,5]]
-            screen.refresh()
+            for p in blig:
+                p[0] *= 2
+                p[1] *= 2
+                screen.refresh()
             print(0)
         
         # Original ttimer logic can stay, but maybe add a small sleep in the loop if needed for stability

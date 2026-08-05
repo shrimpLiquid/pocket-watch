@@ -1,5 +1,6 @@
 #splash,xrd,screen
 #0x00ff00
+#120
 from apps import *
 def test(splash,xrd,screen):
     startup(splash)

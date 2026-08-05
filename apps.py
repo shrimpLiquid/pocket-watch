@@ -5,27 +5,43 @@ from time import sleep
 import sys
 from adafruit_display_shapes.filled_polygon import FilledPolygon
 sys.path.append("/sd")
+supervisor.runtime.autoreload = False
+direct = []
+for f in os.listdir("/sd"): 
+    if f != "System Volume Information" and not f.startswith("."):
+        direct.append(f)
+apps = len(direct)
+alist = []
 
-global apps
-apps = 0
+def getHue(AP):
+    with open("/sd/"+AP+"/"+AP+".py", "r") as file:
+        hue = int(str(file.readlines()[2]).strip("#"))
+    return(hue)
+
+def bubbleSort(arr):
+    n = len(arr)
+    for i in range(n):
+        swapped = False
+        for j in range(0, n - i - 1):
+            if getHue(arr[j]) > getHue(arr[j + 1]):
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break  
+    return(arr)
+
+alist = bubbleSort(direct)
+
 def listapps(num):
-    global apps
-    print
-
-    direct = [f for f in os.listdir("/sd") if f != "System Volume Information" and not f.startswith(".")]
-    apps = len(direct)
-    
-    f = direct[num]
-    
-
+    f = alist[num]
+    print(getHue(f))
     with open("/sd/"+f+"/"+f+".py", "r") as file:
         lines = file.readlines()
         name = str(f)
         args = str(lines[0]).strip("#\n")
-        
-
-
         color = str(int(lines[1].strip("#\n"), 16))
+        print(name)
+
         return (name, args, color)
 def startup(splash):
     while len(splash) > 0: 
@@ -59,6 +75,7 @@ def launcher(splash,xrd,screen):
             t = xrd.touch_read()
             if t is not None:
                 if dist((120,120),t) < 30:
+                    
                     supervisor.reload()
         for i in range(apps):
             angle = radians(((360/apps)*i)-90)
